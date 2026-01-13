@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NBA Scores System Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-primary: #0d1117;
+        --bg-secondary: #161b22;
+        --bg-card: #1c2128;
+        --accent: #f97316;
+        --accent-glow: rgba(249, 115, 22, 0.3);
+        --text-primary: #e6edf3;
+        --text-secondary: #8b949e;
+        --border: #30363d;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Outfit", sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+      }
+
+      /* Geometric background pattern */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+            circle at 20% 80%,
+            var(--accent-glow) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(99, 102, 241, 0.15) 0%,
+            transparent 50%
+          ),
+          linear-gradient(
+            135deg,
+            var(--bg-primary) 0%,
+            var(--bg-secondary) 100%
+          );
+        z-index: -1;
+      }
+
+      header {
+        padding: 3rem 2rem 2rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border);
+        background: rgba(13, 17, 23, 0.8);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(
+          135deg,
+          var(--accent) 0%,
+          #fb923c 50%,
+          #fbbf24 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+      }
+
+      header p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        font-weight: 300;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
+
+      .diagram-section {
+        margin-bottom: 4rem;
+        animation: fadeInUp 0.6s ease-out backwards;
+      }
+
+      .diagram-section:nth-child(1) {
+        animation-delay: 0.1s;
+      }
+      .diagram-section:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .diagram-section:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      .diagram-section:nth-child(4) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .diagram-section h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .diagram-section h2::before {
+        content: "";
+        width: 4px;
+        height: 1.5rem;
+        background: var(--accent);
+        border-radius: 2px;
+      }
+
+      .diagram-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        overflow-x: auto;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+          0 2px 4px -2px rgba(0, 0, 0, 0.2);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .diagram-card:hover {
+        border-color: var(--accent);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+          0 2px 4px -2px rgba(0, 0, 0, 0.2), 0 0 30px var(--accent-glow);
+      }
+
+      .mermaid {
+        display: flex;
+        justify-content: center;
+        background: transparent;
+      }
+
+      /* Table styling */
+      .table-section {
+        margin-top: 4rem;
+        animation: fadeInUp 0.6s ease-out 0.5s backwards;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+      }
+
+      th {
+        background: var(--accent);
+        color: var(--bg-primary);
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-size: 0.8rem;
+      }
+
+      th:first-child {
+        border-radius: 8px 0 0 0;
+      }
+
+      th:last-child {
+        border-radius: 0 8px 0 0;
+      }
+
+      td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-secondary);
+      }
+
+      tr:hover td {
+        background: rgba(249, 115, 22, 0.05);
+        color: var(--text-primary);
+      }
+
+      tr:last-child td:first-child {
+        border-radius: 0 0 0 8px;
+      }
+
+      tr:last-child td:last-child {
+        border-radius: 0 0 8px 0;
+      }
+
+      .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: var(--accent);
+        color: var(--bg-primary);
+        border-radius: 50%;
+        font-weight: 600;
+        font-size: 0.8rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        border-top: 1px solid var(--border);
+      }
+
+      footer span {
+        color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>🏀 NBA Scores System</h1>
+      <p>Architecture diagrams for the scores feature</p>
+    </header>
+
+    <div class="container">
+      <section class="diagram-section">
+        <h2>User Flow: Viewing Today's NBA Scores</h2>
+        <div class="diagram-card">
+          <pre class="mermaid">
+flowchart TD
+    subgraph User Actions
+        A[👤 User Opens NBA App] --> B[📱 App Home Screen Loads]
+        B --> C[👆 User Taps 'Scores']
+        C --> D[📋 Scores Menu Appears]
+        D --> E[👆 User Taps 'NBA']
+    end
+
+    subgraph Frontend
+        E --> F[🔄 Scores Screen Renders]
+        F --> G[📡 API Request Triggered]
+    end
+
+    subgraph Backend Services
+        G --> H{API Gateway}
+        H --> I[Authentication Service]
+        I --> J[Scores Service]
+        J --> K[(NBA Scores Database)]
+        K --> L[Query Today's Games]
+        L --> M[Format Response JSON]
+    end
+
+    subgraph Response Flow
+        M --> N[📦 JSON Response]
+        N --> O[Parse Game Data]
+        O --> P[🏀 Render Score Cards]
+    end
+
+    P --> Q[👀 User Sees Today's Scores]
+
+    style A fill:#4a90d9,color:#fff
+    style Q fill:#2ecc71,color:#fff
+    style K fill:#9b59b6,color:#fff
+    style H fill:#e74c3c,color:#fff
+                </pre
+          >
+        </div>
+      </section>
+
+      <section class="diagram-section">
+        <h2>Sequence Diagram: API Request Lifecycle</h2>
+        <div class="diagram-card">
+          <pre class="mermaid">
+sequenceDiagram
+    actor User
+    participant App as NBA Mobile App
+    participant API as API Gateway
+    participant Auth as Auth Service
+    participant Scores as Scores Service
+    participant DB as Database
+    participant Cache as Redis Cache
+
+    User->>App: Open App
+    User->>App: Tap "Scores"
+    User->>App: Tap "NBA"
+    
+    App->>API: GET /api/v1/scores/nba?date=today
+    API->>Auth: Validate Token
+    Auth-->>API: Token Valid ✓
+    
+    API->>Cache: Check Cache
+    
+    alt Cache Hit
+        Cache-->>API: Return Cached Scores
+    else Cache Miss
+        API->>Scores: Fetch Scores
+        Scores->>DB: SELECT games WHERE date = TODAY
+        DB-->>Scores: Game Results
+        Scores-->>API: Formatted Scores
+        API->>Cache: Store in Cache (TTL: 30s)
+    end
+    
+    API-->>App: JSON Response
+    App-->>User: Display Score Cards
+                </pre
+          >
+        </div>
+      </section>
+
+      <section class="diagram-section">
+        <h2>Component Architecture</h2>
+        <div class="diagram-card">
+          <pre class="mermaid">
+graph TB
+    subgraph Client Layer
+        Mobile[📱 NBA Mobile App]
+        Web[🌐 NBA.com]
+    end
+
+    subgraph API Layer
+        Gateway[API Gateway]
+        LB[Load Balancer]
+    end
+
+    subgraph Service Layer
+        ScoresSvc[Scores Service]
+        GamesSvc[Games Service]
+        TeamsSvc[Teams Service]
+        StatsSvc[Stats Service]
+    end
+
+    subgraph Data Layer
+        Primary[(Primary DB)]
+        Replica[(Read Replica)]
+        Cache[(Redis Cache)]
+    end
+
+    subgraph External
+        LiveFeed[🏟️ Live Game Feed]
+    end
+
+    Mobile --> LB
+    Web --> LB
+    LB --> Gateway
+    Gateway --> ScoresSvc
+    Gateway --> GamesSvc
+    Gateway --> TeamsSvc
+    Gateway --> StatsSvc
+    
+    ScoresSvc --> Cache
+    ScoresSvc --> Replica
+    GamesSvc --> Replica
+    
+    LiveFeed --> Primary
+    Primary --> Replica
+
+    style Mobile fill:#4a90d9,color:#fff
+    style Web fill:#4a90d9,color:#fff
+    style Gateway fill:#e74c3c,color:#fff
+    style Cache fill:#f39c12,color:#fff
+    style Primary fill:#9b59b6,color:#fff
+                </pre
+          >
+        </div>
+      </section>
+
+      <section class="table-section">
+        <h2>Data Flow Summary</h2>
+        <div class="diagram-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Action</th>
+                <th>Component</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="step-number">1</span></td>
+                <td>Open App</td>
+                <td>Client</td>
+                <td>User launches NBA app</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">2</span></td>
+                <td>Tap Scores</td>
+                <td>Client</td>
+                <td>Navigate to scores section</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">3</span></td>
+                <td>Tap NBA</td>
+                <td>Client</td>
+                <td>Filter to NBA league</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">4</span></td>
+                <td>API Call</td>
+                <td>Frontend</td>
+                <td>GET /api/v1/scores/nba</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">5</span></td>
+                <td>Auth Check</td>
+                <td>API Gateway</td>
+                <td>Validate user session/token</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">6</span></td>
+                <td>Cache Lookup</td>
+                <td>Redis</td>
+                <td>Check for cached scores</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">7</span></td>
+                <td>DB Query</td>
+                <td>Scores Service</td>
+                <td>Fetch from database if cache miss</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">8</span></td>
+                <td>Response</td>
+                <td>API</td>
+                <td>Return JSON with game data</td>
+              </tr>
+              <tr>
+                <td><span class="step-number">9</span></td>
+                <td>Render</td>
+                <td>Frontend</td>
+                <td>Display score cards to user</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <p>Chapter 4: Architects — <span>System Design Fundamentals</span></p>
+    </footer>
+
+    <script>
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "dark",
+        themeVariables: {
+          primaryColor: "#f97316",
+          primaryTextColor: "#e6edf3",
+          primaryBorderColor: "#30363d",
+          lineColor: "#8b949e",
+          secondaryColor: "#1c2128",
+          tertiaryColor: "#161b22",
+          background: "#0d1117",
+          mainBkg: "#1c2128",
+          secondBkg: "#161b22",
+          border1: "#30363d",
+          border2: "#30363d",
+          arrowheadColor: "#8b949e",
+          fontFamily: "Outfit, sans-serif",
+          fontSize: "14px",
+          labelBackground: "#1c2128",
+          textColor: "#e6edf3",
+          actorTextColor: "#e6edf3",
+          actorBkg: "#1c2128",
+          actorBorder: "#f97316",
+          actorLineColor: "#8b949e",
+          signalColor: "#e6edf3",
+          signalTextColor: "#e6edf3",
+          labelBoxBkgColor: "#1c2128",
+          labelBoxBorderColor: "#30363d",
+          labelTextColor: "#e6edf3",
+          loopTextColor: "#e6edf3",
+          noteBorderColor: "#f97316",
+          noteBkgColor: "#1c2128",
+          noteTextColor: "#e6edf3",
+          activationBorderColor: "#f97316",
+          activationBkgColor: "#1c2128",
+          sequenceNumberColor: "#0d1117",
+        },
+        flowchart: {
+          htmlLabels: true,
+          curve: "basis",
+        },
+        sequence: {
+          diagramMarginX: 50,
+          diagramMarginY: 10,
+          actorMargin: 50,
+          width: 150,
+          height: 65,
+          boxMargin: 10,
+          boxTextMargin: 5,
+          noteMargin: 10,
+          messageMargin: 35,
+          mirrorActors: true,
+          useMaxWidth: true,
+        },
+      });
+    </script>
+  </body>
+</html>
